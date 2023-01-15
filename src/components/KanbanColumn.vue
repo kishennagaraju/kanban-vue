@@ -1,6 +1,10 @@
 <script setup lang="ts">
 import DraggableHandle from "./DraggableHandle.vue";
 import KanbanTask from "./KanbanTask.vue";
+import { Column } from "../../types";
+defineProps<{
+  column: Column
+}>();
 </script>
 
 <template>
@@ -32,14 +36,15 @@ import KanbanTask from "./KanbanTask.vue";
           type="text"
           class="task bg-white p-2 mb-2 shadow-sm min-w-[200px]"
           v-model="title"
+          ref="taskAdd"
           @keyup.enter="addTask(column.id)"
-          @blur="this.newTask = !this.newTask"
+          @blur="toggleNewTask()"
           :class="{hidden: !newTask}"
       />
       <button
           class="text-gray-500"
           :class="{hidden: newTask}"
-          @click="this.newTask = !this.newTask"
+          @click="toggleNewTask()"
       >
         + Add a Task
       </button>
@@ -52,7 +57,6 @@ import draggable from "vuedraggable";
 import { nanoid } from "nanoid";
 
 export default {
-  props: ['column'],
   components: {
     draggable
   },
@@ -78,7 +82,23 @@ export default {
     },
     removeColumn (columnId) {
       this.$emit('remove-column', { columnId });
+    },
+    toggleNewTask() {
+      const nt = this.newTask;
+      this.newTask = !nt;
+      if (this.newTask) {
+        this.focusInput();
+      }
+    },
+    focusInput() {
+      this.$nextTick(() => {
+        const inputRef = this.$refs.taskAdd;
+        inputRef.focus();
+      });
     }
+  },
+  mounted() {
+    this.focusInput();
   },
   watch: {
     itemsDragged(value, oldValue) {
