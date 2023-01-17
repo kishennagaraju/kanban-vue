@@ -72,6 +72,7 @@ export default {
       const task = {
         id: nanoid(),
         title: this.title,
+        status: 1,
         createdAt: new Date()
       };
       this.$emit('add-task', { columnId, task });

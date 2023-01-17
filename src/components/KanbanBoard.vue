@@ -67,6 +67,7 @@ export default {
             this.columns[i].tasks.push(task);
           }
         }
+        this.valueChange = true;
     },
     addColumn () {
       const column = {
@@ -156,7 +157,7 @@ export default {
               console.log("Successfully Posted!");
             })
             .catch(error => {
-              console.log("Failed to Post Data!");
+              console.log("Failed to Post Data!", error);
             });
 
         this.valueChange = false;
